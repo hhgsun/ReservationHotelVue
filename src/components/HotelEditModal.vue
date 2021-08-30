@@ -2,7 +2,7 @@
   <div class="hotel-edit-modal">
     <div
       class="modal"
-      :class="$store.state.modalOpen ? 'd-block' : 'd-none'"
+      :class="$store.state.hotelModalOpen ? 'd-block' : 'd-none'"
       id="hotelEditModal"
       tabindex="-1"
       aria-labelledby="hotelEditModalLabel"
@@ -17,7 +17,7 @@
               <button
                 type="button"
                 class="btn-close"
-                @click="$store.commit('modalOpen')"
+                @click="$store.commit('hotelModalOpen')"
               ></button>
             </div>
             <div class="modal-body p-5 pt-0">
@@ -72,6 +72,16 @@
                   Otelin En İyi Özellikleri (özellikleri virgül ile ayırınız)
                 </label>
               </div>
+              <div class="mb-3">
+                <label>Resim</label>
+                <input
+                  type="file"
+                  class="form-control rounded-4"
+                  @change="imageUpload"
+                  accept="image/*"
+                  required
+                />
+              </div>
             </div>
             <div class="modal-footer">
               <button
@@ -85,7 +95,7 @@
               <button
                 type="button"
                 class="btn btn-secondary"
-                @click="$store.commit('modalOpen')"
+                @click="$store.commit('hotelModalOpen')"
               >
                 İPTAL
               </button>
@@ -129,12 +139,12 @@ export default {
       if (this.formData.id == null) {
         this.$store.dispatch("addHotel", this.formData).then(() => {
           this.$emit("changeData");
-          this.$store.commit("modalOpen");
+          this.$store.commit("hotelModalOpen");
         });
       } else {
         this.$store.dispatch("updateHotel", this.formData).then(() => {
           this.$emit("changeData");
-          this.$store.commit("modalOpen");
+          this.$store.commit("hotelModalOpen");
         });
       }
     },
@@ -143,8 +153,12 @@ export default {
       if (c) {
         this.$store.dispatch("deleteHotel", this.formData.id);
         this.$emit("changeData");
-        this.$store.commit("modalOpen");
+        this.$store.commit("hotelModalOpen");
       }
+    },
+    imageUpload(e) {
+      const file = e.target.files[0];
+      this.formData.file = file;
     },
   },
 };

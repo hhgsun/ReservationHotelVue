@@ -3,8 +3,22 @@ import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
 import Hotels from '../views/Hotels.vue'
 import ResultHotels from '../views/ResultHotels.vue'
+import Reservations from '../views/Reservations.vue'
+import { getAuth } from "firebase/auth";
 
 Vue.use(VueRouter)
+
+const authenticated = (to, from, next) => {
+  getAuth().onAuthStateChanged((user) => {
+    if (user != null) {
+      next()
+      return
+    } else {
+      next('/')
+      return
+    }
+  });
+}
 
 const routes = [
   {
@@ -22,7 +36,14 @@ const routes = [
   {
     path: '/hotels',
     name: 'Hotels',
-    component: Hotels
+    component: Hotels,
+    beforeEnter: authenticated
+  },
+  {
+    path: '/reservations',
+    name: 'Reservations',
+    component: Reservations,
+    beforeEnter: authenticated
   },
   {
     path: '/result/:city/:start/:end',
@@ -32,9 +53,10 @@ const routes = [
 ]
 
 const router = new VueRouter({
-  mode: 'history',
+  mode: "history",
   base: process.env.BASE_URL,
   routes
 })
+
 
 export default router

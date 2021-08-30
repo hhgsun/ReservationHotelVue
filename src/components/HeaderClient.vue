@@ -5,7 +5,11 @@
       style="grid-template-columns: 1fr 2fr"
     >
       <div class="dropdown">
-        <a
+        <!-- class="dropdown-toggle"
+        id="dropdownNavLink"
+        data-bs-toggle="dropdown"
+        aria-expanded="false" -->
+        <router-link to="/"
           href="#"
           class="
             d-flex
@@ -14,28 +18,22 @@
             mb-2 mb-lg-0
             link-dark
             text-decoration-none
-            dropdown-toggle
+            flex-row
           "
-          id="dropdownNavLink"
-          data-bs-toggle="dropdown"
-          aria-expanded="false"
         >
           <img
             alt="Hotel Reservation"
             src="../assets/logo.png"
-            height="32"
+            height="40"
             class="me-2"
           />
           <small class="text-muted me-1">HOTEL RESERVATION</small>
-        </a>
+        </router-link>
         <ul
           class="dropdown-menu text-small shadow"
           aria-labelledby="dropdownNavLink"
           data-popper-placement="bottom-end"
         >
-          <li>
-            <a class="dropdown-item" href="#" aria-current="page">Overview</a>
-          </li>
           <router-link class="dropdown-item" exact-active-class="active" to="/"
             >Home</router-link
           >
@@ -45,27 +43,12 @@
             to="/about"
             >About</router-link
           >
-          <router-link class="dropdown-item" exact-active-class="active" to="/hotels"
-            >Hotels</router-link
-          >
-          <li><a class="dropdown-item" href="#">Inventory</a></li>
-          <li><a class="dropdown-item" href="#">Customers</a></li>
-          <li><a class="dropdown-item" href="#">Products</a></li>
-          <li><hr class="dropdown-divider" /></li>
-          <li><a class="dropdown-item" href="#">Reports</a></li>
-          <li><a class="dropdown-item" href="#">Analytics</a></li>
+          <!-- <li><hr class="dropdown-divider" /></li>
+          <li><a class="dropdown-item" href="#">Reports</a></li> -->
         </ul>
       </div>
 
       <div class="d-flex align-items-center ms-auto">
-        <!-- <form class="w-100 me-3">
-          <input
-            type="search"
-            class="form-control"
-            placeholder="Search..."
-            aria-label="Search"
-          />
-        </form> -->
 
         <div class="flex-shrink-0 dropdown">
           <a
@@ -76,7 +59,16 @@
             aria-expanded="false"
           >
             <img
-              src="https://github.com/mdo.png"
+              v-if="$store.state.authData == null"
+              src="../assets/no-avatar.png"
+              alt="mdo"
+              width="32"
+              height="32"
+              class="rounded-circle"
+            />
+            <img
+              v-else
+              :src="$store.state.authData.photoURL"
               alt="mdo"
               width="32"
               height="32"
@@ -87,11 +79,45 @@
             class="dropdown-menu text-small shadow"
             aria-labelledby="dropdownUser2"
           >
-            <li><a class="dropdown-item" href="#">New project...</a></li>
-            <li><a class="dropdown-item" href="#">Settings</a></li>
-            <li><a class="dropdown-item" href="#">Profile</a></li>
-            <li><hr class="dropdown-divider" /></li>
-            <li><a class="dropdown-item" href="#">Sign out</a></li>
+            <li
+              v-if="
+                $store.state.authData != null && $store.state.authData.isAdmin
+              "
+            >
+              <router-link
+                class="dropdown-item"
+                exact-active-class="active"
+                to="/hotels"
+                >Hotels</router-link
+              >
+            </li>
+            <li v-if="$store.state.authData != null">
+              <router-link
+                class="dropdown-item"
+                exact-active-class="active"
+                to="/reservations"
+                >Rezervasyonlarım</router-link
+              >
+            </li>
+            <li v-if="$store.state.authData != null">
+              <hr class="dropdown-divider" />
+            </li>
+            <li v-if="$store.state.authData == null">
+              <a
+                class="dropdown-item"
+                href="#"
+                @click="$store.commit('loginModalOpen')"
+                >Giriş Yap</a
+              >
+            </li>
+            <li v-if="$store.state.authData != null">
+              <a
+                class="dropdown-item"
+                href="#"
+                @click="$store.dispatch('logOut')"
+                >Çıkış Yap</a
+              >
+            </li>
           </ul>
         </div>
       </div>

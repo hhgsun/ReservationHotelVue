@@ -54,6 +54,7 @@
           </div>
         </div>
       </form>
+
     </div>
     <!-- .search-box -->
   </div>
@@ -66,7 +67,9 @@ export default {
   data() {
     return {
       cities: [],
-      searchData: {},
+      searchData: {
+        city: "İSTANBUL",
+      },
     };
   },
   created() {
